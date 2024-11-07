@@ -10,6 +10,7 @@ import LoginScreen from './screens/LoginScreen';
 import ManagementScreen from './screens/ManagementScreen';
 import ProductManagementScreen from './screens/ProductManagementScreen';
 import AddProductScreen from './screens/AddProductScreen'; // 导入 AddProductScreen
+import TestScannerScreen from './screens/TestScannerScreen';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const Stack = createStackNavigator();
@@ -43,6 +44,7 @@ export default function App() {
         <Stack.Screen name="Management" component={ManagementScreen} options={{ title: 'Management' }} />
         <Stack.Screen name="ProductManagement" component={ProductManagementScreen} options={{ title: 'Product Management' }} />
         <Stack.Screen name="AddProduct" component={AddProductScreen} options={{ title: 'Add Product' }} />
+        <Stack.Screen name="TestScanner" component={TestScannerScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

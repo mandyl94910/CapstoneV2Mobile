@@ -17,6 +17,10 @@ const ManagementScreen = () => {
     // Order report logic
   };
 
+  const handleTestScanner = () => {
+    navigation.navigate('TestScanner'); // 跳转到 TestScannerScreen
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Hello Admin!</Text>
@@ -28,6 +32,10 @@ const ManagementScreen = () => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleOrderReport}>
         <Text style={styles.buttonText}>Order Report</Text>
+      </TouchableOpacity>
+      {/* 新增 TestScannerScreen 按钮 */}
+      <TouchableOpacity style={styles.button} onPress={handleTestScanner}>
+        <Text style={styles.buttonText}>Open Scanner</Text>
       </TouchableOpacity>
     </View>
   );

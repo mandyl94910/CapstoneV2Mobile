@@ -6,8 +6,8 @@ import { REACT_APP_API_URL } from '@env';
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('Chris');
+  const [password, setPassword] = useState('securepassword123');
   const navigation = useNavigation();
 
   const handleLogin = async () => {
