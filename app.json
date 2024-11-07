@@ -1,4 +1,13 @@
 {
-  "name": "CapstoneV2Mobile",
-  "displayName": "CapstoneV2Mobile"
+  "name": "main",
+  "displayName": "main",
+  "owner": "mandyl94910",
+  "android": {
+    "package": "com.mandyl94910.capstonev2mobile"
+  },
+  "expo": {
+    "android": {
+      "permissions": ["CAMERA"]
+    }
+  }
 }

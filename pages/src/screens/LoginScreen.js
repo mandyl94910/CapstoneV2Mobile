@@ -1,25 +1,28 @@
 // client/src/screens/LoginScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+import { REACT_APP_API_URL } from '@env';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigation = useNavigation();
 
   const handleLogin = async () => {
     try {
-        console.log("Attempting to log in with:", { username, password });
-      const response = await axios.post('http://10.0.2.2:3001/api/account/login', {
+      console.log("Attempting to log in with:", { username, password });
+      const response = await axios.post(`${REACT_APP_API_URL}/api/account/login`, {
         username,
         password,
       });
       console.log("Response:", response);
       if (response.status === 200) {
-        Alert.alert("Success", response.data.message);
+        navigation.navigate('Management');
       }
     } catch (error) {
-        console.log("Login error:", error.response ? error.response.data : error.message);
+      console.log("Login error:", error.response ? error.response.data : error.message);
       Alert.alert("Login Failed", "Invalid credentials or server error.");
     }
   };
@@ -40,7 +43,9 @@ const LoginScreen = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Login" onPress={handleLogin} />
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -62,6 +67,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
+  },
+  button: {
+    backgroundColor: '#0099CC', // Cyan color
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    marginVertical: 15,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
   },
 });
 
