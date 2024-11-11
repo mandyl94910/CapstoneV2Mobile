@@ -58,6 +58,10 @@ const AddProductScreen = () => {
 
   // Form validation
   const validateForm = () => {
+    if (!formData.product_id) {
+      setValidationMessage('Product ID cannot be empty.');
+      return false;
+    }
     if (!formData.product_name) {
       setValidationMessage('Product name cannot be empty.');
       return false;
@@ -96,6 +100,7 @@ const AddProductScreen = () => {
     // 发送数据到后端 API
     try {
       const response = await axios.post(`${REACT_APP_API_URL}/api/products/add-product`, {
+        product_id: formData.product_id,
         product_name: formData.product_name,
         price: parseFloat(formData.price),
         product_description: formData.product_description,
@@ -125,7 +130,7 @@ const AddProductScreen = () => {
 
   // 处理 Scan 按钮点击事件，导航到 TestScannerScreen
   const handleScanPress = () => {
-    navigation.navigate('TestScanner');
+    navigation.navigate('TestScanner', { previousScreen: 'AddProduct' });
   };
 
   return (

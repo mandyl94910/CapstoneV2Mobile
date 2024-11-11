@@ -2,12 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const TestScannerScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const navigation = useNavigation();
+  const route = useRoute();
 
   useEffect(() => {
     (async () => {
@@ -16,6 +17,7 @@ const TestScannerScreen = () => {
     })();
   }, []);
 
+  // 判断权限状态
   if (hasPermission === null) {
     return <Text>请求摄像头权限中...</Text>;
   }
@@ -23,16 +25,19 @@ const TestScannerScreen = () => {
     return <Text>摄像头权限被拒绝，请在设备设置中启用摄像头权限。</Text>;
   }
 
+  const handleBarCodeScanned = ({ data }) => {
+    setScanned(true);
+    const previousScreen = route.params?.previousScreen || 'AddProduct'; // 获取调用页面的名称
+    navigation.navigate(previousScreen, { scannedData: data }); // 动态返回调用页面并传递条形码数据
+  };
+
   return (
     <View style={styles.container}>
       <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : ({ data }) => {
-            setScanned(true);
-            navigation.navigate('AddProduct', { scannedData: data });
-        }}
-        barCodeTypes={[BarCodeScanner.Constants.BarCodeType.ean13, BarCodeScanner.Constants.BarCodeType.ean8]} // 限制为常见条形码类型
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        barCodeTypes={[BarCodeScanner.Constants.BarCodeType.ean13, BarCodeScanner.Constants.BarCodeType.ean8]}
         style={StyleSheet.absoluteFillObject}
-        />
+      />
       {scanned && (
         <TouchableOpacity
           style={styles.button}

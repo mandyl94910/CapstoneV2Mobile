@@ -1,5 +1,5 @@
 // src/screens/ProductManagementScreen.js
-import React from 'react';
+import React,{useState}from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -10,11 +10,11 @@ const ProductManagementScreen = () => {
   };
 
   const handleSearchProduct = () => {
-    // Search product logic
+    navigation.navigate('ProductList');
   };
 
   const handleShipProduct = () => {
-    // Ship product logic
+    navigation.navigate('ShipProduct'); // 跳转到 ShipProductScreen
   };
 
   return (

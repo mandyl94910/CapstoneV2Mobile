@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const authRoutes = require('./routes/accountRoutes');
 const categoryRoutes = require('./routes/categoryRoutes'); // 引入类别路由
 const productRoutes = require('./routes/productRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 const app = express();
 const cors = require('cors');
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 app.use('/api/account', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 
 app.listen(3001,'0.0.0.0', () => {
   console.log(`Server running on 3001`);
