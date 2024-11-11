@@ -11,6 +11,7 @@ import ManagementScreen from './screens/ManagementScreen';
 import ProductManagementScreen from './screens/ProductManagementScreen';
 import AddProductScreen from './screens/AddProductScreen'; // 导入 AddProductScreen
 import TestScannerScreen from './screens/TestScannerScreen';
+import TrackingScannerScreen from './screens/TrackingScannerScreen';
 import ProductListScreen from './screens/ProductListScreen'; 
 import EditProductScreen from './screens/EditProductScreen';
 import ShipProductScreen from './screens/ShipProductScreen';
@@ -49,6 +50,7 @@ export default function App() {
         <Stack.Screen name="ProductManagement" component={ProductManagementScreen} options={{ title: 'Product Management' }} />
         <Stack.Screen name="AddProduct" component={AddProductScreen} options={{ title: 'Add Product' }} />
         <Stack.Screen name="TestScanner" component={TestScannerScreen} />
+        <Stack.Screen name="TrackingScanner" component={TrackingScannerScreen} />
         <Stack.Screen name="ProductList" component={ProductListScreen} />
         <Stack.Screen name="EditProduct" component={EditProductScreen} options={{ title: 'Edit Product' }} />
         <Stack.Screen name="ShipProduct" component={ShipProductScreen} />

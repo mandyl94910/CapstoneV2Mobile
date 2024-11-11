@@ -1,5 +1,5 @@
 // src/screens/ShipProductScreen.js
-import React, { useState, useCallback } from 'react';
+import React, {useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useFocusEffect ,useNavigation } from '@react-navigation/native';
@@ -17,7 +17,6 @@ const ShipProductScreen = () => {
     try {
       const response = await axios.get(`${REACT_APP_API_URL}/api/orders/all-orders`);
       setOrders(response.data);
-      setFilteredOrders(response.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
@@ -30,14 +29,21 @@ const ShipProductScreen = () => {
     }, [])
   );
 
+  useEffect(() => {
+    const filterOrders = () => {
+      if (statusFilter === 'All') {
+        setFilteredOrders(orders);
+      } else {
+        setFilteredOrders(orders.filter(order => order.status === statusFilter));
+      }
+    };
+    filterOrders();
+  }, [orders, statusFilter]);
+
   const handleStatusChange = (value) => {
     setStatusFilter(value);
-    if (value === 'All') {
-      setFilteredOrders(orders);
-    } else {
-      setFilteredOrders(orders.filter(order => order.status === value));
-    }
   };
+  
   const handleOrderPress = (order) => {
     navigation.navigate('EditShipment', { order }); // Pass order details
   };
@@ -67,9 +73,9 @@ const ShipProductScreen = () => {
           onValueChange={(value) => handleStatusChange(value)}
         >
           <Picker.Item label="All" value="All" />
-          <Picker.Item label="Pending" value="Pending" />
-          <Picker.Item label="Shipped" value="Shipped" />
-          <Picker.Item label="Completed" value="Completed" />
+          <Picker.Item label="Pending" value="pending" />
+          <Picker.Item label="Shipped" value="shipped" />
+          <Picker.Item label="Completed" value="completed" />
         </Picker>
       </View>
 
