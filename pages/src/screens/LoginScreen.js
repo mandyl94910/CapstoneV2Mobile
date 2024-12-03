@@ -4,10 +4,12 @@ import { View, Text, TextInput, Alert, StyleSheet, TouchableOpacity } from 'reac
 import axios from 'axios';
 import { REACT_APP_API_URL } from '@env';
 import { useNavigation } from '@react-navigation/native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const LoginScreen = () => {
-  const [username, setUsername] = useState('Chris');
+  const [username, setUsername] = useState('AdminChris');
   const [password, setPassword] = useState('securepassword123');
+  const [isPasswordVisible, setPasswordVisible] = useState(false);
   const navigation = useNavigation();
 
   const handleLogin = async () => {
@@ -36,13 +38,25 @@ const LoginScreen = () => {
         value={username}
         onChangeText={setUsername}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!isPasswordVisible}
+        />
+         <TouchableOpacity
+          onPress={() => setPasswordVisible(!isPasswordVisible)}
+        >
+          <MaterialIcons
+            name={isPasswordVisible ? 'visibility' : 'visibility-off'}
+            size={24}
+            color="gray"
+          />
+        </TouchableOpacity>
+      </View>
+      
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
@@ -54,31 +68,52 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 50,
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    fontSize: 18,
+    height: 48,
+    width: 300,
     borderWidth: 1,
-    marginBottom: 10,
+    borderColor: '#ccc',
+    borderRadius: 5,
     paddingHorizontal: 10,
+    marginBottom: 15,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 300,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+  },
+  passwordInput: {
+    flex: 1,
+    fontSize: 18,
+    height: 48,
   },
   button: {
-    backgroundColor: '#0099CC', // Cyan color
+    backgroundColor: '#0099EE', 
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 10,
     marginVertical: 15,
     alignItems: 'center',
+    width: 300,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 20,
   },
 });
 

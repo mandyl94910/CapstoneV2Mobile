@@ -5,7 +5,7 @@ import 'react-native-gesture-handler'; // 必须放在其他导入之前
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SafeAreaView, Button, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { SafeAreaView, TouchableOpacity, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View, Image } from 'react-native';
 import LoginScreen from './screens/LoginScreen';
 import ManagementScreen from './screens/ManagementScreen';
 import ProductManagementScreen from './screens/ProductManagementScreen';
@@ -23,16 +23,25 @@ const Stack = createStackNavigator();
 function HomeScreen({ navigation }) {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
+    // flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={backgroundStyle.backgroundColor} />
-      <ScrollView contentInsetAdjustmentBehavior="automatic" style={backgroundStyle}>
-        <View style={{ backgroundColor: isDarkMode ? Colors.black : Colors.white, padding: 20 }}>
-          <Text style={styles.sectionTitle}>Welcome to the Home Screen</Text>
-          <Button title="Go to Login" onPress={() => navigation.navigate('Login')} />
+      <ScrollView contentInsetAdjustmentBehavior="automatic" 
+        style={backgroundStyle}
+      >
+        <View style={{ backgroundColor: Colors.lighter, padding: 50, }}>
+          <Image
+            source={require('../../assets/images/manager.webp')}
+            style={styles.image}
+          />
+          <Text style={styles.sectionTitle}>Welcome to TopTrading Management System</Text>
+          <TouchableOpacity  style={styles.button} onPress={() => navigation.navigate('Login')} >
+            <Text style={styles.buttonText}>Go to Login</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -44,7 +53,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Login' }} />
         <Stack.Screen name="Management" component={ManagementScreen} options={{ title: 'Management' }} />
         <Stack.Screen name="ProductManagement" component={ProductManagementScreen} options={{ title: 'Product Management' }} />
@@ -53,7 +62,7 @@ export default function App() {
         <Stack.Screen name="TrackingScanner" component={TrackingScannerScreen} />
         <Stack.Screen name="ProductList" component={ProductListScreen} />
         <Stack.Screen name="EditProduct" component={EditProductScreen} options={{ title: 'Edit Product' }} />
-        <Stack.Screen name="ShipProduct" component={ShipProductScreen} />
+        <Stack.Screen name="ShipProduct" component={ShipProductScreen} options={{ title: 'Ship Product' }}/>
         <Stack.Screen name="EditShipment" component={EditShipmentScreen} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -61,10 +70,30 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  image: {
+    width: 300,
+    height: 300,
+    alignSelf: 'center',
+    marginVertical: 80,
+  },
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
     textAlign: 'center',
-    marginVertical: 20,
+    marginBottom: 20
+  },
+  button: {
+    backgroundColor: '#0099EE', 
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    marginVertical: 15,
+    alignItems: 'center',
+    width: 300,
+    marginBottom: 500,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 20,
   },
 });

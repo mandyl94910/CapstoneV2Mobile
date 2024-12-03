@@ -19,10 +19,10 @@ const TestScannerScreen = () => {
 
   // 判断权限状态
   if (hasPermission === null) {
-    return <Text>请求摄像头权限中...</Text>;
+    return <Text>Requesting camera permissions...</Text>;
   }
   if (hasPermission === false) {
-    return <Text>摄像头权限被拒绝，请在设备设置中启用摄像头权限。</Text>;
+    return <Text>Camera permission denied. Please enable camera access in device settings.</Text>;
   }
 
   const handleBarCodeScanned = ({ data }) => {

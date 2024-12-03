@@ -1,10 +1,11 @@
 // src/screens/AddProductScreen.js
 import React, { useState,useEffect,useCallback  } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity, ScrollView, Switch } from 'react-native';
+import { View, Text, TextInput, Alert, StyleSheet, TouchableOpacity, ScrollView, Switch } from 'react-native';
 import { useNavigation,useRoute, useFocusEffect } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker'; // 导入 Picker 组件
 import axios from 'axios'; // 确保 axios 已安装
 import { REACT_APP_API_URL } from '@env';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const AddProductScreen = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ const AddProductScreen = () => {
     price: '',
     quantity: '',
     category: '',
-    visibility: 'true',
+    visibility: true,
   });
   const [validationMessage, setValidationMessage] = useState('');
   const [isScanning, setIsScanning] = useState(false);
@@ -106,7 +107,7 @@ const AddProductScreen = () => {
         product_description: formData.product_description,
         category_id: category_id,
         quantity: parseInt(formData.quantity),
-        visibility: formData.visibility === 'true' // 将字符串转换为布尔值
+        visibility: formData.visibility
       });
   
       if (response.status === 201) {
@@ -119,7 +120,7 @@ const AddProductScreen = () => {
           price: '',
           quantity: '',
           category: '',
-          visibility: 'true',
+          visibility: true,
         });
       }
     } catch (error) {
@@ -134,7 +135,10 @@ const AddProductScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}
+      keyboardShouldPersistTaps="handled"
+      nestedScrollEnabled={true}
+    >
       <Text style={styles.title}>Add New Product</Text>
 
       {/* Product ID Input with Camera Button */}
@@ -148,6 +152,12 @@ const AddProductScreen = () => {
         />
         <TouchableOpacity style={styles.cameraButton} onPress={handleScanPress}>
           <Text style={styles.cameraButtonText}>Scan</Text>
+          <Ionicons 
+            name={'scan'}
+            size={24}
+            color="white"
+            style={{marginRight: 10}}
+          />
         </TouchableOpacity>
       </View>
 
@@ -206,20 +216,25 @@ const AddProductScreen = () => {
               style={styles.picker}
               mode="dropdown"
             >
-              <Picker.Item label="Select a category..." value="" />
+              <Picker.Item label="Select a category..." value=""/>
               {categories.map((category) => (
-                <Picker.Item key={category.id} label={category.name} value={category.name} />
+                <Picker.Item 
+                  key={category.id} 
+                  label={category.name} 
+                  value={category.name}
+                />
               ))}
             </Picker>
           </View>
         )}
       </View>
 
+
       {/* Visibility Switch */}
       <View style={styles.switchContainer}>
         <Switch
           trackColor={{ false: '#d3d3d3', true: '#00BFFF' }}
-          thumbColor={formData.visibility ? '#0099CC' : '#888'}
+          thumbColor={formData.visibility ? '#0099EE' : '#888'}
           onValueChange={(value) => handleChange('visibility', value)}
           value={formData.visibility}
         />
@@ -248,18 +263,20 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    fontWeight: '600',
+    marginVertical: 40,
   },
   productIdContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
-    width: '100%',
+    width: '95%',
   },
   productIdInput: {
     flex: 2,
-    height: 40,
-    borderColor: 'gray',
+    fontSize: 18,
+    height: 48,
+    borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -267,20 +284,23 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   cameraButton: {
-    flex: 1,
-    backgroundColor: '#0099CC',
-    paddingVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0099EE',
+    padding: 10,
     borderRadius: 5,
     alignItems: 'center',
   },
   cameraButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
+    paddingHorizontal: 10,
   },
   input: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
+    fontSize: 18,
+    width: '95%',
+    height: 48,
+    borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 15,
@@ -288,25 +308,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   pickerContainer: {
-    width: '100%',
+    width: '95%',
     marginBottom: 15,
   },
   pickerWrapper: {
     width: '100%',
-    height: 40,
-    borderColor: 'gray',
+    height: 48,
+    borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: '#fff',
     justifyContent: 'center',
+    overflow: 'hidden', // 确保边框生效
   },
   picker: {
+    fontSize: 18,
     width: '100%',
-    height: 40,
+    color: '#333',
+    height: 48,
   },
   label: {
     alignSelf: 'flex-start',
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 5,
   },
   switchContainer: {
@@ -318,13 +341,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   submitButton: {
-    backgroundColor: '#0099CC',
+    backgroundColor: '#0099EE',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 10,
     marginTop: 20,
     alignItems: 'center',
-    width: '100%',
+    width: '95%',
   },
   submitButtonText: {
     color: '#fff',

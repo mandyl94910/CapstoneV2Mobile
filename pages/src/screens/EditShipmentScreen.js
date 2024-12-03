@@ -5,6 +5,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { REACT_APP_API_URL } from '@env';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const EditShipmentScreen = () => {
   const route = useRoute();
@@ -17,13 +18,15 @@ const EditShipmentScreen = () => {
     ship_date: order?.ship_date || '', // 初始化为当前订单的 ship_date 或空
     status: order?.status, // 初始化为当前订单的状态或 'Pending'
   });
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
   useEffect(() => {
     if (route.params?.scannedData) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        tracking_number: route.params.scannedData, // 自动填充 tracking_number
-      }));
+      // setFormData((prevFormData) => ({
+      //   ...prevFormData,
+      //   tracking_number: route.params.scannedData, // 自动填充 tracking_number
+      // }));
+      handleChange('tracking_number', route.params.scannedData);
       navigation.setParams({ scannedData: null }); // 清除 scannedData，防止重复填充
     }
   }, [route.params?.scannedData]);
@@ -34,13 +37,33 @@ const EditShipmentScreen = () => {
   // 格式化显示地址信息
   const formattedAddress = addressData
     ? `${addressData.first_name} ${addressData.last_name}, ${addressData.street}, ${addressData.city}, ${addressData.province}, ${addressData.country}, ${addressData.postal}`
-    : '无地址信息';
+    : 'No address';
 
   const handleScanPress = () => {
     navigation.navigate('TrackingScanner', { previousScreen: 'EditShipment',order: order });
   };
 
+  // 更新表单状态
+  const handleChange = (name, value) => {
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+
+    // 实时检查 tracking_number 是否为空
+    if (name === 'tracking_number') {
+      setIsSaveDisabled(!value.trim());
+    }
+  };
+
+  useEffect(() => {
+    const isDisabled = !formData.tracking_number.trim(); // 检查是否为空
+    setIsSaveDisabled(isDisabled);
+  }, []);
+
   const handleSave = async () => {
+    if (isSaveDisabled) {
+      Alert.alert('Error', 'Please enter a tracking number before shipping.');
+      return;
+    }
     const currentDate = new Date().toISOString().split('T')[0];
   
     // 更新表单状态为 Shipped，更新发货日期
@@ -69,6 +92,19 @@ const EditShipmentScreen = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+  
+    // 获取日期部分
+    const formattedDate = date.toISOString().split('T')[0]; // 提取 YYYY-MM-DD 格式
+  
+    // 获取时间部分
+    const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+    const formattedTime = date.toLocaleTimeString('en-US', timeOptions);
+  
+    return `${formattedDate}, ${formattedTime}`;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.section}>
@@ -77,7 +113,7 @@ const EditShipmentScreen = () => {
         <Text style={styles.infoText}>Total: ${order.total}</Text>
         <Text style={styles.infoText}>Total Tax: ${order.total_tax}</Text>
         <Text style={styles.infoText}>Status: {order.status}</Text>
-        <Text style={styles.infoText}>Order Date: {order.order_date}</Text>
+        <Text style={styles.infoText}>Order Date: {formatDate(order.order_date)}</Text>
         <Text style={styles.infoText}>Ship Date: {order.ship_date || 'Not Shipped'}</Text>
       </View>
   
@@ -108,16 +144,25 @@ const EditShipmentScreen = () => {
           <TextInput
             style={styles.trackingInput}
             value={formData.tracking_number}
-            onChangeText={(value) => setFormData({ ...formData, tracking_number: value })}
+            onChangeText={(value) => handleChange('tracking_number', value)}
           />
           <TouchableOpacity style={styles.scanButton} onPress={handleScanPress}>
             <Text style={styles.buttonText}>Scan</Text>
+            <Ionicons 
+              name="scan"
+              size={24}
+              color="white"
+              style={{marginRight: 10}}
+            />
           </TouchableOpacity>
         </View>
       </View>
   
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <TouchableOpacity style={styles.saveButton} 
+          onPress={handleSave}
+          disabled={isSaveDisabled}
+          >
           <Text style={styles.buttonText}>Ship</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
@@ -162,8 +207,8 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 48,
+    borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -177,14 +222,15 @@ const styles = StyleSheet.create({
   trackingInput: {
     flex: 1, // 仅在 trackingContainer 中应用 flex，使输入框与按钮一起适应
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
   },
   scanButton: {
-    backgroundColor: '#0099CC',
+    flexDirection: 'row',
+    backgroundColor: '#0099EE',
     padding: 10,
     borderRadius: 5,
     marginLeft: 10,
@@ -208,18 +254,19 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
+    paddingHorizontal: 10,
   },
   addressText: {
     fontSize: 16,
     color: '#333',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#eee',
     padding: 10,
     borderRadius: 5,
     lineHeight: 24,
   },
   pickerContainer: {
-    borderColor: 'gray',
+    borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     overflow: 'hidden', // 保持边框圆角

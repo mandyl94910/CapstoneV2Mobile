@@ -13,6 +13,15 @@ const addProduct = async (req, res) => {
   } = req.body;
 
   try {
+    // 检查 product_id 是否已经存在
+    const existingProduct = await db.query(
+      `SELECT * FROM product WHERE product_id = $1`,
+      [product_id]
+    );
+
+    if (existingProduct.rows.length > 0) {
+      return res.status(400).json({ error: 'Product ID already exists' });
+    }
     // 插入新的产品信息
     const result = await db.query(
       `INSERT INTO product (product_id, product_name, price, product_description, category_id, quantity, visibility)
@@ -72,4 +81,27 @@ const updateProduct = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, getAllProducts,updateProduct  };
+const deleteProduct = async (req, res) => {
+  const { product_id } = req.body;
+  console.log('Received product_id:', product_id);
+  try {
+    const result = await db.query(
+      `DELETE FROM product 
+       WHERE product_id = $1 
+       RETURNING *`,
+      [product_id]
+    );
+    console.log('Delete result:', result.rows, 'Row count:', result.rowCount);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.status(200).json({ message: 'Product deleted successfully', product: result.rows[0] });
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+module.exports = { addProduct, getAllProducts,updateProduct, deleteProduct  };

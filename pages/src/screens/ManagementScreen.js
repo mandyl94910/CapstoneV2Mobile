@@ -44,18 +44,18 @@ const ManagementScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 50, // Moves content further up
   },
   title: {
     fontSize: 24,
     marginBottom: 30,
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   button: {
-    backgroundColor: '#0099CC', // Cyan color
+    backgroundColor: '#0099EE',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 10,

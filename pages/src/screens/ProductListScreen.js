@@ -4,6 +4,8 @@ import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'r
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { REACT_APP_API_URL } from '@env';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const ProductListScreen = () => {
   const [products,setProducts] = useState([]);
@@ -71,11 +73,33 @@ const ProductListScreen = () => {
 
   const renderProduct = ({ item }) => (
     <TouchableOpacity style={styles.productCard} onPress={() => handleProductPress(item)}>
-      <Text style={styles.productText}>Product ID: {item.product_id}</Text>
-      <Text style={styles.productText}>Product Name: {item.product_name}</Text>
-      <Text style={styles.productText}>Price: {item.price}</Text>
-      <Text style={styles.productText}>Quantity: {item.quantity}</Text>
-      <Text style={styles.productText}>Visibility: {item.visibility ? 'Y' : 'N'}</Text>
+      <FontAwesome6 name="edit" size={20} color="#0099EE" 
+        style={{ 
+          position: 'absolute', // 绝对定位
+          top: 15, // 距离顶部 15 像素
+          right: 15, // 距离右侧 15 像素
+          zIndex: 1, // 确保图标位于卡片内容之上
+        }}/>
+    <Text style={styles.productText}>
+      <Text style={{fontWeight: 'bold'}}>Product ID: </Text>
+      <Text style={{color: '#666'}}>{item.product_id}</Text>
+    </Text>
+    <Text style={styles.productText}>
+      <Text style={{fontWeight: 'bold'}}>Product Name: </Text>
+      <Text style={{color: '#666'}}>{item.product_name}</Text>
+    </Text>
+    <Text style={styles.productText}>
+      <Text style={{fontWeight: 'bold'}}>Price: </Text>
+      <Text style={{color: '#666'}}>${item.price}</Text>
+    </Text>
+    <Text style={styles.productText}>
+      <Text style={{fontWeight: 'bold'}}>Quantity: </Text>
+      <Text style={{color: '#666'}}>{item.quantity}</Text>
+    </Text>
+    <Text style={styles.productText}>
+      <Text style={{fontWeight: 'bold'}}>Visibility: </Text>
+      <Text style={{color: '#666'}}>{item.visibility ? 'Y' : 'N'}</Text>
+    </Text>
     </TouchableOpacity>
   );
 
@@ -94,6 +118,12 @@ const ProductListScreen = () => {
         />
         <TouchableOpacity style={styles.scanButton} onPress={handleScanPress}>
           <Text style={styles.scanButtonText}>Scan</Text>
+          <Ionicons 
+            name="scan"
+            size={24}
+            color="white"
+            style={{marginRight: 10}}
+          />
         </TouchableOpacity>
       </View>
 
@@ -115,45 +145,51 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     textAlign: 'center',
-    marginVertical: 10,
+    fontWeight: 'bold',
+    marginVertical: 20,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginHorizontal: 15,
     marginBottom: 10,
   },
   searchBar: {
     flex: 1,
-    height: 40,
+    height: 48,
+    fontSize: 18,
     borderColor: '#ddd',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 5,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
   },
   scanButton: {
-    backgroundColor: '#0099CC',
+    flexDirection: 'row',
+    backgroundColor: '#0099EE',
     padding: 10,
     borderRadius: 5,
     marginLeft: 10,
   },
   scanButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
+    paddingHorizontal: 10,
   },
   productCard: {
     backgroundColor: '#fff',
     padding: 15,
     marginVertical: 10,
+    marginHorizontal: 15,
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
+    shadowColor: '#777',
+    shadowOpacity: 0.02,
     shadowRadius: 5,
     elevation: 5,
   },
   productText: {
     fontSize: 16,
-    marginBottom: 5,
+    marginBottom: 3,
   },
 });
 
